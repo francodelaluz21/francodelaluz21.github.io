@@ -1,0 +1,347 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+  <!--
+  ArcGIS API for JavaScript, https://js.arcgis.com
+  For more information about the visualization-heatmap sample, read the original sample description at developers.arcgis.com.
+  https://developers.arcgis.com/javascript/latest/sample-code/visualization-heatmap/index.html
+  -->
+<title>Actividad Embarcaciones Industriales desde Enero 2015 a Mayo 2019 </title>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.10/esri/css/main.css">
+
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
+  <script src="https://js.arcgis.com/4.10/"></script>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/layers/CSVLayer",
+      "esri/views/MapView",
+      "esri/Graphic",
+      "esri/widgets/Legend"
+    ], function(
+      Map,
+      CSVLayer,
+      MapView,
+      Graphic,
+      Legend
+    ) {
+
+      const url =
+"https://raw.githubusercontent.com/francodelaluz21/francodelaluz21.github.io/master/DATA%20MINEM%20VP%202015-2019.csv";
+      // Paste the url into a browser's address bar to download and view the attributes
+      // in the CSV file. These attributes include:
+      // * mag - magnitude
+      // * type - earthquake or other event such as nuclear test
+      // * place - location of the event
+      // * time - the time of the event
+
+      const template = {
+        title: "{place}",
+        content: "Magnitude {mag} {type} hit {place} on {time}."
+      };
+
+      // The heatmap renderer assigns each pixel in the view with
+      // an intensity value. The ratio of that intensity value
+      // to the maxPixel intensity is used to assign a color
+      // from the continuous color ramp in the colorStops property
+
+      const renderer = {
+        type: "heatmap",
+        colorStops: [
+    { ratio: 0, color: "rgba(85, 255, 0, 0)" },
+    { ratio: 0.1, color: "rgba(128, 255, 0, 1)" },
+    { ratio: 0.2, color: "rgba(170, 255, 0, 1)" },
+    { ratio: 0.3, color: "rgba(212, 255, 0, 1)" },
+    { ratio: 0.4, color: "rgba(255, 255, 0, 1)" },
+    { ratio: 0.5, color: "rgba(255, 213, 0, 1)" },
+    { ratio: 0.6, color: "rgba(255, 170, 0, 1)" },
+    { ratio: 0.7, color: "rgba(255, 128, 0, 1)" },
+    { ratio: 0.8, color: "rgba(190, 85, 0, 1)" },
+    { ratio: 0.9, color: "rgba(170, 42, 0, 1)" },
+    { ratio: 1, color: "rgba(200, 20, 0, 1)" }
+  ],
+        //maxPixelIntensity: 100,
+        minPixelIntensity: 0,
+        blurRadius: 2.60,
+      };
+
+      const layer = new CSVLayer({
+        url: url,
+        title: "Actividad pesquera anguilera - Marzo 2019",
+        copyright: "SISESAT-lhuaringa",
+        popupTemplate: template,
+        renderer: renderer
+      });
+
+
+
+
+      const map = new Map({
+        basemap: "osm", //https://developers.arcgis.com/javascript/latest/api-reference/esri-WebMap.html#portalItem
+        layers: [layer]
+
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        center: [-81, -5.3],
+        zoom: 9,
+        map: map
+      });
+
+
+
+
+
+      view.ui.add(new Legend({
+        view: view
+      }), "bottom-left");
+
+
+
+
+
+
+      /*************************
+       * Create a point graphic
+       *************************/
+
+      // First create a point geometry (this is the location of the Titanic)
+      var point = {
+        type: "point", // autocasts as new Point()
+        longitude: -49.97,
+        latitude: 41.73
+      };
+
+      // Create a symbol for drawing the point
+      var markerSymbol = {
+        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+        color: [0, 119, 0],
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [255, 0, 0],
+          width: 1
+        }
+      };
+
+      // Create a graphic and add the geometry and symbol to it
+      var pointGraphic = new Graphic({
+        geometry: point,
+        symbol: markerSymbol
+      });
+
+      /****************************
+       * Create a polyline graphic
+       ****************************/
+
+      // First create a line geometry (this is the Keystone pipeline)
+      var polyline = {
+        type: "polyline", 
+        color: "lightblue",
+        width: 0.5,// autocasts as new Polyline()
+        paths: [
+[-7.003440898,-0.93642821],
+[-7.00301439,-80.36341888],
+[-7.16967685,-80.36319016],
+[-7.169700118,-80.28607435],
+[-7.377997353,-80.28574516],
+[-7.377494717,-80.02049141],
+[-7.73400189,-80.0196879],
+[-7.735123005,-80.93632381],
+[-7.003440898,-80.93642821]
+
+
+]
+      };
+
+      // Create a symbol for drawing the line
+      var lineSymbol = {
+        type: "simple-line", // autocasts as SimpleLineSymbol()
+        color: [22, 25, 255],
+        width: 0.8
+      };
+
+      // Create an object for storing attributes related to the line
+      var lineAtt = {
+        Name: "Keystone Pipeline",
+        Owner: "TransCanada",
+        Length: "3,456 km"
+      };
+
+      /*******************************************
+       * Create a new graphic and add the geometry,
+       * symbol, and attributes to it. You may also
+       * add a simple PopupTemplate to the graphic.
+       * This allows users to view the graphic's
+       * attributes when it is clicked.
+       ******************************************/
+      var polylineGraphic = new Graphic({
+        geometry: polyline,
+        symbol: lineSymbol,
+        attributes: lineAtt,
+        popupTemplate: { // autocasts as new PopupTemplate()
+          title: "{Name}",
+          content: [{
+            type: "fields",
+            fieldInfos: [{
+              fieldName: "Name"
+            }, {
+              fieldName: "Owner"
+            }, {
+              fieldName: "Length"
+            }]
+          }]
+        }
+      });
+
+      /***************************
+       * Create a polygon graphic
+       ***************************/
+
+      // CREASNDO LOS POLIGONOS DE ACUERDO A COORDENADAS
+      var polygon = {
+        type: "polygon", // autocasts as new Polygon()
+        rings: [
+[-80.93642821,-7.003440898],
+[-80.36341888,-7.00301439],
+[-80.36319016,-7.16967685],
+[-80.28607435,-7.169700118],
+[-80.28574516,-7.377997353],
+[-80.02049141,-7.377494717],
+[-80.0196879,-7.73400189],
+[-80.93632381,-7.735123005],
+[-80.93642821,-7.003440898],
+        ]
+      };
+
+         var polygon2 = {
+        type: "polygon", // autocasts as new Polygon()
+        rings: [
+[-80.93632381,-7.735123005],
+[-80.0196879,-7.73400189],
+[-80.01827895,-8.321269369],
+[-80.93623228,-8.322476734],
+[-80.93632381,-7.735123005],
+[-80.93623228,-8.322476734]
+
+        ]
+      };
+
+         var polygon3 = {
+        type: "polygon", // autocasts as new Polygon()
+        rings: [
+[-80.58112988,-8.322261118],
+[-79.83580129,-8.320776753],
+[-79.8338192,-8.966073455],
+[-80.34988134,-8.967341163],
+[-80.35011832,-8.833080557],
+[-80.58056951,-8.833409021],
+[-80.58112988,-8.322261118]
+
+        ]
+      };
+
+      // RELLENO Y BORDE
+      var fillSymbol = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: [2, 139, 79, 0.8],//RELLENO
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [2, 255, 255],//BORDE
+          width: 1
+        }
+      };
+
+      var fillSymbol2 = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: [51, 255, 60, 0.1], //RELLENO
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [255, 255, 255], //BORDE
+          width: 1
+        }
+      };
+
+      var fillSymbol3 = {
+        type: "simple-fill", // autocasts as new SimpleFillSymbol()
+        color: [200, 139, 79, 0.8],//RELLENO
+        outline: { // autocasts as new SimpleLineSymbol()
+          color: [255, 25, 25],//BORDE
+          width: 1
+        }
+      };
+
+      // DEFINIR POLIGONO CON SU BORDE Y RELLENO
+      var polygonGraphic = new Graphic({
+        geometry: polygon,
+        symbol: fillSymbol
+      });
+
+  var polygonGraphic2 = new Graphic({
+        geometry: polygon2,
+        symbol: fillSymbol2
+      });
+
+    var polygonGraphic3 = new Graphic({
+        geometry: polygon3,
+        symbol: fillSymbol3
+      });
+      // GRAFICA POLIGONO
+      view.graphics.addMany([polygonGraphic, polygonGraphic2, polygonGraphic3]); //FUNCION Q GRAFICA EN EL MAPA
+
+      view.when().then(function(){
+
+  // When the view is ready, clone the heatmap renderer
+  // from the only layer in the web map
+
+  const layer = view.map.layers.getItemAt(0);
+  const heatmapRenderer = layer.renderer.clone();
+
+  // The following simple renderer will render all points as simple
+  // markers at certain scales
+
+  const simpleRenderer = {
+    type: "simple",
+    symbol: {
+      type: "simple-marker",
+      color: "#c80000",
+      size: 5
+    }
+  };
+
+  // When the scale is larger than 1:72,224 (zoomed in passed that scale),
+  // then switch from a heatmap renderer to a simple renderer. When zoomed
+  // out beyond that scale, switch back to the heatmap renderer
+
+  view.watch("scale", function(newValue){
+    layer.renderer = newValue <= 72224 ? simpleRenderer : heatmapRenderer;
+  });
+
+});
+      
+
+
+
+});
+
+
+
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+</body>
+
+</html>
