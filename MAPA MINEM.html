@@ -76,7 +76,7 @@
   ],
         //maxPixelIntensity: 100,
         minPixelIntensity: 0,
-        blurRadius: 2.60,
+        blurRadius: 8.0,
       };
 
       const layer = new CSVLayer({
@@ -257,9 +257,9 @@
       // RELLENO Y BORDE
       var fillSymbol = {
         type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        color: [2, 139, 79, 0.8],//RELLENO
+        color: [51, 255, 60, 0.1],//RELLENO
         outline: { // autocasts as new SimpleLineSymbol()
-          color: [2, 255, 255],//BORDE
+          color: [255, 255, 255],//BORDE
           width: 1
         }
       };
@@ -275,9 +275,9 @@
 
       var fillSymbol3 = {
         type: "simple-fill", // autocasts as new SimpleFillSymbol()
-        color: [200, 139, 79, 0.8],//RELLENO
+        color: [51, 255, 60, 0.1],//RELLENO
         outline: { // autocasts as new SimpleLineSymbol()
-          color: [255, 25, 25],//BORDE
+          color: [255, 255, 255],//BORDE
           width: 1
         }
       };
