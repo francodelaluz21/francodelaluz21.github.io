@@ -1,4 +1,4 @@
-time,latitudelongitude,depthmagType,nstgap,dminrms,netid,updatedplace,typehorizontalError,depthErrormagError,magNststatus,locationSource,magSource
+time,latitude,longitude,depth,magType,nst,gap,dmin,rms,net,id,updated,place,type,horizontalError,depthError,magError,magNst,status,locationSource,magSource
 ,-3.8257,-81.0269,,,,,,,,,,,,,,,,,,
 ,-3.8117,-81.018399,,,,,,,,,,,,,,,,,,
 ,-3.807,-81.0136,,,,,,,,,,,,,,,,,,
